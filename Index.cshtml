@@ -1,0 +1,169 @@
+﻿
+@using (Html.BeginForm("UploadBarcodeAExcel", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+   
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            <div class="col-sm-2">
+                <div class="control-label">BarcodeA</div>
+
+            </div>
+            <div class="col-sm-2">
+                <input type="file" id="FileUpload" name="FileUpload" class="" required/>
+
+            </div>
+            <div class="col-sm-2">
+                <input type="submit" value="Upload" id="btnSubmit" class="btn btn-primary" />
+
+            </div>
+
+        </div>
+    </div>
+}
+@using (Html.BeginForm("UploadCatalogAExcel", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            <div class="col-sm-2">
+                <div class="control-label">CatalogA</div>
+
+            </div>
+            <div class="col-sm-2">
+                <input type="file" id="FileUpload" name="FileUpload" class="" required/>
+
+            </div>
+            <div class="col-sm-2">
+                <input type="submit" value="Upload" id="btnSubmit" class="btn btn-primary" />
+
+            </div>
+
+        </div>
+    </div>
+}
+@using (Html.BeginForm("UploadsupplierAExcel", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            <div class="col-sm-2">
+                <div class="control-label">supplierA</div>
+
+
+            </div>
+            <div class="col-sm-2">
+                <input type="file" id="FileUpload" name="FileUpload" class="" required/>
+
+            </div>
+            <div class="col-sm-2">
+                <input type="submit" value="Upload" id="btnSubmit" class="btn btn-primary" />
+
+            </div>
+
+        </div>
+
+    </div>
+}
+@using (Html.BeginForm("UploadBarcodeBExcel", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            <div class="col-sm-2">
+                <div class="control-label">BarcodeB</div>
+
+            </div>
+            <div class="col-sm-2">
+                <input type="file" id="FileUpload" name="FileUpload" class="" required/>
+
+            </div>
+            <div class="col-sm-2">
+                <input type="submit" value="Upload" id="btnSubmit" class="btn btn-primary" />
+
+            </div>
+
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("UploadCatalogBExcel", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            <div class="col-sm-2">
+                <div class="control-label">CatalogB</div>
+
+            </div>
+            <div class="col-sm-2">
+                <input type="file" id="FileUpload" name="FileUpload" class="" required/>
+
+            </div>
+            <div class="col-sm-2">
+                <input type="submit" value="Upload" id="btnSubmit" class="btn btn-primary" />
+
+            </div>
+
+        </div>
+    </div>
+}
+@using (Html.BeginForm("UploadSupplierBExcel", "Home", FormMethod.Post, new { enctype = "multipart/form-data", onclick = "return myFunction2()" }))
+{
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            <div class="col-sm-2">
+                <div class="control-label">supplierB</div>
+
+
+            </div>
+            <div class="col-sm-2">
+                <input type="file" id="FileUpload" name="FileUpload" class="" required/>
+
+            </div>
+            <div class="col-sm-2">
+                <input type="submit" value="Upload" id="btnSubmit" class="btn btn-primary" />
+
+            </div>
+
+        </div>
+    </div>
+}
+@using (Html.BeginForm("GetMergeCatalog", "Home", FormMethod.Post,new { onclick = "return myFunction2()" } ))
+{
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2">
+                <input type="submit" value="Result_Output" id="btnSubmit" class="btn btn-primary" />
+
+            </div>
+        </div>
+        
+    </div>
+}
+@*<script>
+    function myFunction2() {
+        $.ajax({
+            type: "POST",
+            traditional: true,
+            async: false,
+            cache: false, processData: false,
+            url: '/Home/GetMergeCatalog',
+            
+            success: function (result) {
+                if (result) {
+                    alert("ahja");
+                }
+               
+            },
+            error: function (xhr) {
+                //debugger;  
+                console.log(xhr.responseText);
+                alert("Error has occurred..");
+            }
+        });  
+    }
+</script>*@
+
+
