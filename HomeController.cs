@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -19,6 +16,7 @@ namespace WebApplication2.Controllers
 
         public ActionResult Index()
         {
+
             return View();
         }
         public FileResult DownloadExcel()
@@ -47,6 +45,11 @@ namespace WebApplication2.Controllers
                 pathToExcelFile = targetpath + filename;
 
             }
+            else
+            {
+                data = "Excel file is Empty";
+
+            }
             con.Close();
             con.Open();
             string csvData = System.IO.File.ReadAllText(pathToExcelFile);
@@ -73,17 +76,11 @@ namespace WebApplication2.Controllers
 
 
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error occured while getting csvData", e.StackTrace);
-            }
 
-            try
-            {
-               // using (var conn =
-               //new SqlConnection(ConfigurationManager.ConnectionStrings["conn"].ToString()))
-               // {
+
+                try
+                {
+
                     using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
                     {
                         sqlBulkCopy.DestinationTableName = "dbo.barcodeA ";
@@ -92,26 +89,32 @@ namespace WebApplication2.Controllers
                         sqlBulkCopy.ColumnMappings.Add("SKU", "SKU");
                         sqlBulkCopy.ColumnMappings.Add("Barcode", "Barcode");
 
-                      //  conn.Open();
+                        //  conn.Open();
                         sqlBulkCopy.WriteToServer(dt);
                         data = "Excel uploaded successfully";
                         //conn.Close();
 
-                    } 
+                    }
 
-                //}
+                    //}
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
+                    data = "Fail to Upload Excel";
+
+                }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
-                data = "Fail to Upload Excel";
+                Console.WriteLine("Error occured while getting csvData", e.StackTrace);
+                data = "please submit valid excel";
 
             }
             finally
             {
                 con.Close();
             }
-           
             
             return Json(data);
 
@@ -136,6 +139,11 @@ namespace WebApplication2.Controllers
                 pathToExcelFile = targetpath + filename;
 
             }
+            else
+            {
+                data = "Excel file is Empty";
+
+            }
             con.Close();
             con.Open();
             string csvData = System.IO.File.ReadAllText(pathToExcelFile);
@@ -160,14 +168,10 @@ namespace WebApplication2.Controllers
                         }
                     }
                 }
-            } 
-            catch (Exception e)
-            {
-                Console.WriteLine("Error occured while getting csvData",e.StackTrace);
-            }
-            try
-            {
-               
+
+                try
+                {
+
                     using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
                     {
                         sqlBulkCopy.DestinationTableName = "dbo.barcodeB";
@@ -179,12 +183,19 @@ namespace WebApplication2.Controllers
                         sqlBulkCopy.WriteToServer(dt);
                         data = "Excel uploaded successfully";
 
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
+                    data = "Fail to upload Excel";
+
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
-                data = "Fail to upload Excel";
+                Console.WriteLine("Error occured while getting csvData", e.StackTrace);
+                data = "please submit valid excel";
 
             }
             finally
@@ -217,6 +228,11 @@ namespace WebApplication2.Controllers
                 pathToExcelFile = targetpath + filename;
 
             }
+            else
+            {
+                data = "Excel file is Empty";
+
+            }
             con.Close();
             con.Open();
           
@@ -243,33 +259,36 @@ namespace WebApplication2.Controllers
                     }
                 }
 
-            }catch(Exception e)
-            {
-                Console.WriteLine("Error occured while getting csvData", e.StackTrace);
 
-            }
-            try
-            {
-               
+                try
+                {
+
                     using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
                     {
                         sqlBulkCopy.DestinationTableName = "dbo.CatalogA ";
 
                         sqlBulkCopy.ColumnMappings.Add("SKU", "SKU");
-                     //   if(sqlBulkCopy.ColumnMappings.Add.Contains(string.IsNullOrEmpty))
+                        //   if(sqlBulkCopy.ColumnMappings.Add.Contains(string.IsNullOrEmpty))
                         sqlBulkCopy.ColumnMappings.Add("Description", "Description");
-                        
+
                         sqlBulkCopy.WriteToServer(dt);
                         data = "Excel uploaded successfully";
 
                         con.Close();
+                    }
+                }
+
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
+                    data = "Fail to upload Excel";
                 }
             }
-             
             catch (Exception e)
             {
-                Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
-                data = "Fail to upload Excel";
+                Console.WriteLine("Error occured while getting csvData", e.StackTrace);
+                data = "please submit valid excel";
+
             }
             finally
             {
@@ -301,10 +320,16 @@ namespace WebApplication2.Controllers
                 pathToExcelFile = targetpath + filename;
 
             }
+            else
+            {
+                data = "Excel file is Empty";
+
+            }
             con.Close();
             con.Open();
             string csvData = System.IO.File.ReadAllText(pathToExcelFile);
-            try {
+            try
+            {
                 foreach (string row in csvData.Split('\n'))
                 {
 
@@ -324,14 +349,10 @@ namespace WebApplication2.Controllers
                         }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error occured while getting csvData", e.StackTrace);
-            }
-            try
-            {
-              
+
+                try
+                {
+
                     using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
                     {
                         sqlBulkCopy.DestinationTableName = "dbo.CatalogB ";
@@ -340,12 +361,19 @@ namespace WebApplication2.Controllers
                         sqlBulkCopy.WriteToServer(dt);
                         data = "Excel uploaded successfully";
 
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
+                    data = "Fail to upload Excel";
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
-                data = "Fail to upload Excel";
+                Console.WriteLine("Error occured while getting csvData", e.StackTrace);
+                data = "please submit valid excel";
+
             }
             finally
             {
@@ -374,6 +402,11 @@ namespace WebApplication2.Controllers
                 pathToExcelFile = targetpath + filename;
 
             }
+            else
+            {
+                data = "Excel file is Empty";
+
+            }
             con.Close();
             con.Open();
 
@@ -400,15 +433,11 @@ namespace WebApplication2.Controllers
                     }
                 }
 
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("Error occured while getting csvData", e.StackTrace);
 
-            }
-            try
-            {
-               
+
+                try
+                {
+
                     using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
                     {
                         sqlBulkCopy.DestinationTableName = "dbo.SupplierA ";
@@ -418,12 +447,19 @@ namespace WebApplication2.Controllers
                         sqlBulkCopy.WriteToServer(dt);
                         data = "Excel uploaded successfully";
 
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
+                    data = "Fail to upload Excel";
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
-                data = "Fail to upload Excel";
+                Console.WriteLine("Error occured while getting csvData", e.StackTrace);
+                data = "please submit valid excel";
+
             }
             finally
             {
@@ -454,6 +490,11 @@ namespace WebApplication2.Controllers
                 pathToExcelFile = targetpath + filename;
 
             }
+            else
+            {
+                data = "Excel file is Empty";
+
+            }
 
             con.Close();
             con.Open();
@@ -480,14 +521,10 @@ namespace WebApplication2.Controllers
                         }
                     }
                 }
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("Error occured while getting csvData", e.StackTrace);
 
-            }
-            try
-            {
+
+                try
+                {
                     using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
                     {
                         sqlBulkCopy.DestinationTableName = "dbo.SupplierB ";
@@ -498,12 +535,19 @@ namespace WebApplication2.Controllers
                         sqlBulkCopy.WriteToServer(dt);
                         data = "Excel uploaded successfully";
 
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
+                    data = "Fail to upload Excel";
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error occured while inserting data to database", e.StackTrace);
-                data = "Fail to upload Excel";
+                Console.WriteLine("Error occured while getting csvData", e.StackTrace);
+                data = "please submit valid excel";
+
             }
             finally
             {
@@ -518,23 +562,18 @@ namespace WebApplication2.Controllers
             string query = "EXEC " + "merge_catalog";
          SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conn"].ToString());
             SqlCommand cmd = new SqlCommand(query, con);
-            string test = "EXEC " + "Upd_companyDetails";
-            SqlCommand cmd1 = new SqlCommand(test, con);
-            con.Close();
-
-            con.Open();
-            DataTable d_table1 = new DataTable();
-            d_table1.Load(cmd1.ExecuteReader());
-
-            string data = string.Empty;
-
             
+            con.Close();
+            con.Open();
+
+            MergeCompanyDetails();
+            string data = string.Empty;
             DataTable d_table = new DataTable();
             d_table.Load(cmd.ExecuteReader());
+            string a=cmd.ExecuteReader().ToString();
            // string DestinationFolder = @"C:\Users\User\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug";
             string datetime = DateTime.Now.ToString("yyyyMMddHHmmss");
             string FileFullPath =  "\\" + "_" + datetime + ".csv";
-            string FileDelimiter = ",";
             StreamWriter sw = new StreamWriter(FileFullPath, false);
 
             // Write the Header Row to File
@@ -550,22 +589,32 @@ namespace WebApplication2.Controllers
                 }
 
                 csv += "\r\n";
-
-                foreach (DataRow row in d_table.Rows)
+                if (d_table.Rows.Count > 0)
                 {
-                    foreach (DataColumn column in d_table.Columns)
+
+                    foreach (DataRow row in d_table.Rows)
                     {
-                        string value = row[column].ToString().Replace('\r', ' ');
-                        csv += value.Replace(",", ";") + ',';
+
+                        foreach (DataColumn column in d_table.Columns)
+                        {
+                            string value = row[column].ToString().Replace('\r', ' ');
+                            csv += value.Replace(",", ";") + ',';
+                        }
+                        csv += "\r\n";
                     }
-                    csv += "\r\n";
+                    data = "Please check the output file saved in your computer";
+
+                }
+                else
+                {
+                    data = "Result is empty,Please upload all the files and check";
+
                 }
 
-
                 sw.Write(csv);
-                data = "Please check the file in your drive";
-
                 sw.Close();
+
+
             }
             catch(Exception e)
             {
@@ -574,11 +623,21 @@ namespace WebApplication2.Controllers
                 data = "Failed to write data to excel";
             }
 
+           
             return Json(data, JsonRequestBehavior.AllowGet);
 
         }
+        
 
+        public void MergeCompanyDetails()
+        {
+            string insertCompanyDetails = "EXEC " + "Upd_companyDetails";
+            con.Close();
 
-
+            con.Open();
+            SqlCommand cmd = new SqlCommand(insertCompanyDetails, con);
+            DataTable d_table1 = new DataTable();
+            d_table1.Load(cmd.ExecuteReader());
+        }
     }
 }
