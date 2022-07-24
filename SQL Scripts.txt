@@ -12,9 +12,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[BarcodeA](
-	[SupplierID] [int] NOT NULL,
-	[SKU] [nvarchar](50) NOT NULL,
-	[Barcode] [nvarchar](max) NOT NULL
+	[SupplierID] [int] NULL,
+	[SKU] [nvarchar](50) NULL,
+	[Barcode] [nvarchar](max) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -30,9 +30,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[BarcodeA](
-	[SupplierID] [int] NOT NULL,
-	[SKU] [nvarchar](50) NOT NULL,
-	[Barcode] [nvarchar](max) NOT NULL
+	[SupplierID] [int] NULL,
+	[SKU] [nvarchar](50) NULL,
+	[Barcode] [nvarchar](max) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -48,8 +48,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[CatalogA](
-	[SKU] [nvarchar](50) NOT NULL,
-	[Description] [nvarchar](50) NOT NULL
+	[SKU] [nvarchar](50) NULL,
+	[Description] [nvarchar](50) NULL
 ) ON [PRIMARY]
 GO
 
@@ -65,8 +65,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[CatalogB](
-	[SKU] [nvarchar](50) NOT NULL,
-	[Description] [nvarchar](50) NOT NULL
+	[SKU] [nvarchar](50) NULL,
+	[Description] [nvarchar](50) NULL
 ) ON [PRIMARY]
 GO
 
@@ -82,8 +82,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[SupplierA](
-	[ID] [int] NOT NULL,
-	[Name] [nvarchar](50) NOT NULL
+	[ID] [int] NULL,
+	[Name] [nvarchar](50) NULL
 ) ON [PRIMARY]
 GO
 
@@ -99,8 +99,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[SupplierB](
-	[ID] [int] NOT NULL,
-	[Name] [nvarchar](50) NOT NULL
+	[ID] [int] NULL,
+	[Name] [nvarchar](50) NULL
 ) ON [PRIMARY]
 GO
 
@@ -116,11 +116,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[companyADetails](
-	[ID] [int] NOT NULL,
-	[Description] [nvarchar](max) NOT NULL,
-	[SKU] [nvarchar](max) NOT NULL,
-	[Barcode] [nvarchar](max) NOT NULL,
-	[Name] [nvarchar](max) NOT NULL,
+	[ID] [int] NULL,
+	[Description] [nvarchar](max) NULL,
+	[SKU] [nvarchar](max) NULL,
+	[Barcode] [nvarchar](max) NULL,
+	[Name] [nvarchar](max) NULL,
 	[source] [nvarchar](50) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -137,11 +137,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[companyBDetails](
-	[ID] [int] NOT NULL,
-	[Description] [nvarchar](max) NOT NULL,
-	[SKU] [nvarchar](max) NOT NULL,
-	[Barcode] [nvarchar](max) NOT NULL,
-	[Name] [nvarchar](max) NOT NULL,
+	[ID] [int] NULL,
+	[Description] [nvarchar](max) NULL,
+	[SKU] [nvarchar](max) NULL,
+	[Barcode] [nvarchar](max) NULL,
+	[Name] [nvarchar](max) NULL,
 	[source] [nvarchar](50) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -158,19 +158,17 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[Result](
-	[SKU] [varchar](max) NOT NULL,
+	[SKU] [varchar](max) NULL,
 	[Description] [nvarchar](max) NULL,
-	[Source] [nchar](10) NOT NULL
+	[Source] [nchar](10) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 
 
-
-
 USE [RetailDB]
 GO
-/****** Object:  StoredProcedure [dbo].[companyA]    Script Date: 24/07/2022 1:37:27 PM ******/
+/****** Object:  StoredProcedure [dbo].[companyA]    Script Date: 24/07/2022 10:14:58 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -179,6 +177,10 @@ ALTER PROCEDURE [dbo].[companyA]
 AS
 BEGIN
 SET NOCOUNT ON
+delete from BarcodeA where SupplierID is null
+delete from catalogA where SKU is null
+delete from SupplierA where ID is null
+
  insert into companyADetails(Description,SKU,Barcode,ID,Name,source) 
 SELECT CatalogA.Description, BarcodeA.SKU, BarcodeA.Barcode, SupplierA.ID, SupplierA.Name,'A'
 FROM CatalogA 
@@ -195,7 +197,7 @@ END
 
 USE [RetailDB]
 GO
-/****** Object:  StoredProcedure [dbo].[companyB]    Script Date: 24/07/2022 1:37:56 PM ******/
+/****** Object:  StoredProcedure [dbo].[companyB]    Script Date: 24/07/2022 10:15:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -204,6 +206,10 @@ ALTER PROCEDURE [dbo].[companyB]
 AS
 BEGIN
 SET NOCOUNT ON
+delete from BarcodeB where SupplierID is null
+delete from catalogB where SKU is null
+delete from SupplierB where ID is null 
+
   insert into companyBDetails(Description,SKU,Barcode,ID,Name,source) 
 SELECT CatalogB.Description, BarcodeB.SKU, BarcodeB.Barcode, SupplierB.ID, SupplierB.Name,'B'
 FROM CatalogB 
@@ -216,10 +222,9 @@ delete from SupplierB
 SET NOCOUNT OFF
 END
 
-
 USE [RetailDB]
 GO
-/****** Object:  StoredProcedure [dbo].[merge_catalog]    Script Date: 24/07/2022 1:38:07 PM ******/
+/****** Object:  StoredProcedure [dbo].[merge_catalog]    Script Date: 24/07/2022 10:15:19 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -254,7 +259,7 @@ END
 
 USE [RetailDB]
 GO
-/****** Object:  StoredProcedure [dbo].[Upd_companyDetails]    Script Date: 24/07/2022 1:38:18 PM ******/
+/****** Object:  StoredProcedure [dbo].[Upd_companyDetails]    Script Date: 24/07/2022 10:15:31 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -266,4 +271,6 @@ exec companyA
 exec companyB
 SET NOCOUNT OFF
 end
+
+
 
