@@ -1,0 +1,269 @@
+CREATE DATABASE RetailDB
+
+
+USE [RetailDB]
+GO
+
+/****** Object:  Table [dbo].[BarcodeA]    Script Date: 24/07/2022 1:39:13 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[BarcodeA](
+	[SupplierID] [int] NOT NULL,
+	[SKU] [nvarchar](50) NOT NULL,
+	[Barcode] [nvarchar](max) NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+USE [RetailDB]
+GO
+
+/****** Object:  Table [dbo].[BarcodeA]    Script Date: 24/07/2022 1:39:13 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[BarcodeA](
+	[SupplierID] [int] NOT NULL,
+	[SKU] [nvarchar](50) NOT NULL,
+	[Barcode] [nvarchar](max) NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+USE [RetailDB]
+GO
+
+/****** Object:  Table [dbo].[CatalogA]    Script Date: 24/07/2022 2:04:05 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CatalogA](
+	[SKU] [nvarchar](50) NOT NULL,
+	[Description] [nvarchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+
+USE [RetailDB]
+GO
+
+/****** Object:  Table [dbo].[CatalogB]    Script Date: 24/07/2022 2:04:45 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CatalogB](
+	[SKU] [nvarchar](50) NOT NULL,
+	[Description] [nvarchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+
+USE [RetailDB]
+GO
+
+/****** Object:  Table [dbo].[SupplierA]    Script Date: 24/07/2022 2:05:25 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SupplierA](
+	[ID] [int] NOT NULL,
+	[Name] [nvarchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+
+USE [RetailDB]
+GO
+
+/****** Object:  Table [dbo].[SupplierB]    Script Date: 24/07/2022 2:05:55 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SupplierB](
+	[ID] [int] NOT NULL,
+	[Name] [nvarchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+
+
+USE [RetailDB]
+GO
+
+/****** Object:  Table [dbo].[companyADetails]    Script Date: 24/07/2022 2:06:25 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[companyADetails](
+	[ID] [int] NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+	[SKU] [nvarchar](max) NOT NULL,
+	[Barcode] [nvarchar](max) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[source] [nvarchar](50) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+USE [RetailDB]
+GO
+
+/****** Object:  Table [dbo].[companyBDetails]    Script Date: 24/07/2022 2:07:00 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[companyBDetails](
+	[ID] [int] NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+	[SKU] [nvarchar](max) NOT NULL,
+	[Barcode] [nvarchar](max) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[source] [nvarchar](50) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+USE [RetailDB]
+GO
+
+/****** Object:  Table [dbo].[Result]    Script Date: 24/07/2022 2:07:30 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Result](
+	[SKU] [varchar](max) NOT NULL,
+	[Description] [nvarchar](max) NULL,
+	[Source] [nchar](10) NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+
+
+
+USE [RetailDB]
+GO
+/****** Object:  StoredProcedure [dbo].[companyA]    Script Date: 24/07/2022 1:37:27 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[companyA]
+AS
+BEGIN
+SET NOCOUNT ON
+ insert into companyADetails(Description,SKU,Barcode,ID,Name,source) 
+SELECT CatalogA.Description, BarcodeA.SKU, BarcodeA.Barcode, SupplierA.ID, SupplierA.Name,'A'
+FROM CatalogA 
+RIGHT JOIN BarcodeA ON CatalogA.SKU = BarcodeA.SKU
+LEFT JOIN SupplierA ON BarcodeA.SupplierID = SupplierA.ID
+
+delete from BarcodeA
+delete from CatalogA
+delete from SupplierA
+
+SET NOCOUNT OFF
+END
+
+
+USE [RetailDB]
+GO
+/****** Object:  StoredProcedure [dbo].[companyB]    Script Date: 24/07/2022 1:37:56 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[companyB]
+AS
+BEGIN
+SET NOCOUNT ON
+  insert into companyBDetails(Description,SKU,Barcode,ID,Name,source) 
+SELECT CatalogB.Description, BarcodeB.SKU, BarcodeB.Barcode, SupplierB.ID, SupplierB.Name,'B'
+FROM CatalogB 
+RIGHT JOIN BarcodeB ON CatalogB.SKU = BarcodeB.SKU
+LEFT JOIN SupplierB ON BarcodeB.SupplierID = SupplierB.ID
+
+delete from BarcodeB
+delete from CatalogB
+delete from SupplierB
+SET NOCOUNT OFF
+END
+
+
+USE [RetailDB]
+GO
+/****** Object:  StoredProcedure [dbo].[merge_catalog]    Script Date: 24/07/2022 1:38:07 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[merge_catalog]
+AS
+BEGIN
+SET NOCOUNT ON
+
+delete from result
+
+
+INSERT INTO result(description, SKU, source)
+(select distinct description,sku,SOURCE from companyADetails A
+except
+select distinct description,sku,SOURCE from companybDetails b )
+union
+(select distinct description,sku,SOURCE from companybDetails b 
+
+except
+select distinct description,sku,SOURCE from companyADetails A)
+
+except
+(select distinct b.description,b.sku,B.SOURCE from companybdetails b inner join 
+companyAdetails a on B.id=A.id where B.barcode=A.barcode)
+
+select sku,description,source from result
+delete from companyADetails
+delete from companyBDetails
+SET NOCOUNT OFF
+END
+
+USE [RetailDB]
+GO
+/****** Object:  StoredProcedure [dbo].[Upd_companyDetails]    Script Date: 24/07/2022 1:38:18 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER procedure [dbo].[Upd_companyDetails]
+as begin
+SET NOCOUNT ON
+exec companyA
+exec companyB
+SET NOCOUNT OFF
+end
+
