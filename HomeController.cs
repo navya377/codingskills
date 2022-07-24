@@ -36,6 +36,7 @@ namespace WebApplication2.Controllers
                                 new DataColumn("SKU",typeof(string)),
             new DataColumn("Barcode",typeof(string)) });
 
+
             if (FileUpload != null)
             {
 
@@ -52,7 +53,9 @@ namespace WebApplication2.Controllers
             }
             con.Close();
             con.Open();
+            
             string csvData = System.IO.File.ReadAllText(pathToExcelFile);
+          //  csvData.
             try
             {
                 foreach (string row in csvData.Split('\n'))
@@ -67,8 +70,12 @@ namespace WebApplication2.Controllers
                             //Execute a loop over the columns.
                             foreach (string cell in row.Split(','))
                             {
-                                dt.Rows[dt.Rows.Count - 1][i] = cell;
-                                i++;
+                                if (dt.Rows.Count> 1)
+                                {
+                                    // dt.Columns[dt.Columns.AddRange][i];
+                                    dt.Rows[dt.Rows.Count - 1][i] = cell;
+                                    i++;
+                                }
 
                             }
                         }
@@ -161,9 +168,11 @@ namespace WebApplication2.Controllers
                             //Execute a loop over the columns.
                             foreach (string cell in row.Split(','))
                             {
-                                dt.Rows[dt.Rows.Count - 1][i] = cell;
-                                i++;
-
+                                if (dt.Rows.Count > 1)
+                                {
+                                    dt.Rows[dt.Rows.Count - 1][i] = cell;
+                                    i++;
+                                }
                             }
                         }
                     }
@@ -251,9 +260,11 @@ namespace WebApplication2.Controllers
                             //Execute a loop over the columns.
                             foreach (string cell in row.Split(','))
                             {
-                                dt.Rows[dt.Rows.Count - 1][i] = cell;
-                                i++;
-
+                                if (dt.Rows.Count > 1)
+                                {
+                                    dt.Rows[dt.Rows.Count - 1][i] = cell;
+                                    i++;
+                                }
                             }
                         }
                     }
@@ -342,9 +353,11 @@ namespace WebApplication2.Controllers
                             //Execute a loop over the columns.
                             foreach (string cell in row.Split(','))
                             {
-                                dt.Rows[dt.Rows.Count - 1][i] = cell;
-                                i++;
-
+                                if (dt.Rows.Count > 1)
+                                {
+                                    dt.Rows[dt.Rows.Count - 1][i] = cell;
+                                    i++;
+                                }
                             }
                         }
                     }
@@ -425,9 +438,11 @@ namespace WebApplication2.Controllers
                             //Execute a loop over the columns.
                             foreach (string cell in row.Split(','))
                             {
-                                dt.Rows[dt.Rows.Count - 1][i] = cell;
-                                i++;
-
+                                if (dt.Rows.Count > 1)
+                                {
+                                    dt.Rows[dt.Rows.Count - 1][i] = cell;
+                                    i++;
+                                }
                             }
                         }
                     }
@@ -514,9 +529,11 @@ namespace WebApplication2.Controllers
                             //Execute a loop over the columns.
                             foreach (string cell in row.Split(','))
                             {
-                                dt.Rows[dt.Rows.Count - 1][i] = cell;
-                                i++;
-
+                                if (dt.Rows.Count > 1)
+                                {
+                                    dt.Rows[dt.Rows.Count - 1][i] = cell;
+                                    i++;
+                                }
                             }
                         }
                     }
@@ -562,82 +579,104 @@ namespace WebApplication2.Controllers
             string query = "EXEC " + "merge_catalog";
          SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conn"].ToString());
             SqlCommand cmd = new SqlCommand(query, con);
-            
+            string data = string.Empty;
+
             con.Close();
             con.Open();
 
-            MergeCompanyDetails();
-            string data = string.Empty;
-            DataTable d_table = new DataTable();
-            d_table.Load(cmd.ExecuteReader());
-            string a=cmd.ExecuteReader().ToString();
-           // string DestinationFolder = @"C:\Users\User\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug";
-            string datetime = DateTime.Now.ToString("yyyyMMddHHmmss");
-            string FileFullPath =  "\\" + "_" + datetime + ".csv";
-            StreamWriter sw = new StreamWriter(FileFullPath, false);
-
-            // Write the Header Row to File
-
-            int ColumnCount = d_table.Columns.Count;
+          bool insertStatus= MergeCompanyDetails();
+           
 
             string csv = string.Empty;
             try
             {
-                foreach (DataColumn column in d_table.Columns)
-                {
-                    csv += column.ColumnName + ',';
-                }
 
-                csv += "\r\n";
-                if (d_table.Rows.Count > 0)
+                if (insertStatus)
                 {
+                    DataTable d_table = new DataTable();
+                    d_table.Load(cmd.ExecuteReader());
+                    string a = cmd.ExecuteReader().ToString();
+                    // string DestinationFolder = @"C:\Users\User\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug";
+                    string datetime = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    string FileFullPath = "\\" + "_" + datetime + ".csv";
+                    StreamWriter sw = new StreamWriter(FileFullPath, false);
 
-                    foreach (DataRow row in d_table.Rows)
+                    // Write the Header Row to File
+
+                    int ColumnCount = d_table.Columns.Count;
+                    foreach (DataColumn column in d_table.Columns)
+                    {
+                        csv += column.ColumnName + ',';
+                    }
+
+                    csv += "\r\n";
+                    if (d_table.Rows.Count > 0)
                     {
 
-                        foreach (DataColumn column in d_table.Columns)
+                        foreach (DataRow row in d_table.Rows)
                         {
-                            string value = row[column].ToString().Replace('\r', ' ');
-                            csv += value.Replace(",", ";") + ',';
-                        }
-                        csv += "\r\n";
-                    }
-                    data = "Please check the output file saved in your computer";
 
+                            foreach (DataColumn column in d_table.Columns)
+                            {
+                                string value = row[column].ToString().Replace('\r', ' ');
+                                csv += value.Replace(",", ";") + ',';
+                            }
+                            csv += "\r\n";
+                        }
+                        data = "Please check the output file saved in your computer";
+
+                    }
+                    else
+                    {
+                        data = "Result is empty,Please upload all the files and check";
+
+                    }
+
+                    sw.Write(csv);
+                    sw.Close();
                 }
                 else
                 {
-                    data = "Result is empty,Please upload all the files and check";
-
+                    data = "Please upload all the excel";
                 }
-
-                sw.Write(csv);
-                sw.Close();
-
 
             }
             catch(Exception e)
             {
                 Console.WriteLine("Failed to write data to excel", e);
-                con.Close();
                 data = "Failed to write data to excel";
             }
+            finally
+            {
+                con.Close();
 
-           
+            }
+
+
             return Json(data, JsonRequestBehavior.AllowGet);
 
         }
         
 
-        public void MergeCompanyDetails()
+        public bool MergeCompanyDetails()
         {
             string insertCompanyDetails = "EXEC " + "Upd_companyDetails";
             con.Close();
 
             con.Open();
             SqlCommand cmd = new SqlCommand(insertCompanyDetails, con);
-            DataTable d_table1 = new DataTable();
-            d_table1.Load(cmd.ExecuteReader());
+            DataTable d_table = new DataTable();
+            if (d_table.Rows.Count > 0)
+            {
+                d_table.Load(cmd.ExecuteReader());
+                return true;
+                
+            }
+            else
+            {
+                return false;
+            }
         }
+
     }
 }
